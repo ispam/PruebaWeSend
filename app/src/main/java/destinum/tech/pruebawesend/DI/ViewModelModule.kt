@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import destinum.tech.pruebawesend.Data.Local.TestDB
 import destinum.tech.pruebawesend.Data.Local.ViewModels.ListDataViewModel
-import destinum.tech.pruebawesend.Data.Local.ViewModels.LogsViewModel
+import destinum.tech.pruebawesend.Data.Local.ViewModels.LogViewModel
 import javax.inject.Singleton
 
 @Module
@@ -25,7 +25,7 @@ class ViewModelModule {
                 ).build()
 
     @Singleton @Provides
-    fun provideLogsVM(db: TestDB) = LogsViewModel(db)
+    fun provideLogsVM(db: TestDB) = LogViewModel(db)
 
     @Singleton @Provides
     fun provideListDataVM(db: TestDB) = ListDataViewModel(db)

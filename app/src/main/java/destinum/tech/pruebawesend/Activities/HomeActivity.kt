@@ -4,28 +4,29 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import destinum.tech.pruebawesend.Data.Local.Entities.AdList
-import destinum.tech.pruebawesend.Data.Local.Entities.Data
+import destinum.tech.pruebawesend.Adapters.LogAdapter
 import destinum.tech.pruebawesend.Data.Local.Entities.DataResult
 import destinum.tech.pruebawesend.Data.Local.Entities.ListData
 import destinum.tech.pruebawesend.Data.Local.ViewModels.ListDataViewModel
-import destinum.tech.pruebawesend.Data.Local.ViewModels.LogsViewModel
+import destinum.tech.pruebawesend.Data.Local.ViewModels.LogViewModel
 import destinum.tech.pruebawesend.Data.Remote.LocalBitcoinsAPI
 import destinum.tech.pruebawesend.R
+import destinum.tech.pruebawesend.Utils.checkFirstRun
+import destinum.tech.pruebawesend.Utils.isOnline
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
-import java.util.*
 import javax.inject.Inject
 
 class HomeActivity : AppCompatActivity() {
@@ -44,27 +45,55 @@ class HomeActivity : AppCompatActivity() {
     lateinit var listDataVM: ListDataViewModel
 
     @Inject
-    lateinit var logsVM: LogsViewModel
+    lateinit var logVM: LogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         App.component.inject(this)
 
-        setUpTapTarget()
+        title = getString(R.string.home_title)
+        checkFirstRun(this, {}, setUpTapTarget(), {})
 
-        home_recycler.layoutManager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
+        home_recycler.layoutManager = LinearLayoutManager(this,  RecyclerView.VERTICAL, false)
+        getLogsFromDB()
 
         home_fab.setOnClickListener {
             showProgressDialog()
-            getLastLogNumber()
+            if (isOnline(this)){
+                getLastLogNumber()
+            } else {
+                Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
+            }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        getLogsFromDB()
+    }
+
+    private fun getLogsFromDB() {
+
+        disposable.add(logVM.getAllLogs()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess {
+                if (it.isEmpty()) {
+                    home_message.visibility = View.VISIBLE
+                }
+                val adapter = LogAdapter(it.sortedByDescending { it.logs_id })
+                adapter.setHasStableIds(true)
+                home_recycler.adapter = adapter
+            }
+            .doOnError { e -> Log.e(TAG, e.message) }
+            .subscribe())
     }
 
     private fun getLastLogNumber() {
 
-        disposable.add(logsVM.getCurrentLogsCount()
+        disposable.add(logVM.getCurrentLogsCount()
             .subscribeOn(Schedulers.io())
             .map {  getResults(it.toLong()) }
             .subscribe())
@@ -102,29 +131,31 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    private fun setUpTapTarget() {
-        MaterialTapTargetPrompt.Builder(this)
-            .setTarget(home_fab)
+    private fun setUpTapTarget(): () -> Unit {
+        return {
+            MaterialTapTargetPrompt.Builder(this)
+                .setTarget(home_fab)
 //            .setAutoDismiss(false)
 //            .setAutoFinish(false)
-            .setPrimaryText("You can search for new info here!")
-            .setBackgroundColour(resources.getColor(R.color.colorPrimaryDark))
-            .setAnimationInterpolator(FastOutSlowInInterpolator())
+                .setPrimaryText("You can search for new info here!")
+                .setBackgroundColour(resources.getColor(R.color.colorPrimaryDark))
+                .setAnimationInterpolator(FastOutSlowInInterpolator())
 //            .setPromptFocal(RectanglePromptFocal())
-            .setPromptStateChangeListener { prompt, state ->
-                when (state) {
-                    MaterialTapTargetPrompt.STATE_FOCAL_PRESSED -> {
-                        // User has pressed the prompt target
-                    }
-                    MaterialTapTargetPrompt.STATE_DISMISSED -> {
-                        // Prompt has been removed from view after the prompt has either been pressed somewhere other than the prompt target or the system back button has been pressed
-                    }
-                    MaterialTapTargetPrompt.STATE_FINISHED -> {
-                        // Prompt has been removed from view after the prompt has been pressed in the focal area
+                .setPromptStateChangeListener { prompt, state ->
+                    when (state) {
+                        MaterialTapTargetPrompt.STATE_FOCAL_PRESSED -> {
+                            // User has pressed the prompt target
+                        }
+                        MaterialTapTargetPrompt.STATE_DISMISSED -> {
+                            // Prompt has been removed from view after the prompt has either been pressed somewhere other than the prompt target or the system back button has been pressed
+                        }
+                        MaterialTapTargetPrompt.STATE_FINISHED -> {
+                            // Prompt has been removed from view after the prompt has been pressed in the focal area
+                        }
                     }
                 }
-            }
-            .show()
+                .show()
+        }
     }
 
     private fun showProgressDialog() {
@@ -135,7 +166,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hideProgressDialog() {
-        if (dialog.isShowing) {
+        if (::dialog.isInitialized && dialog.isShowing) {
             dialog.dismiss()
         }
     }

@@ -4,13 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Logs(
+data class Log(
     var date: String,
     var rate: String,
     var above: String,
     var below: String
 ) {
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     var logs_id: Long  = 0
 }
 

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PruebaWeSend</string>
     <string name="downloading">Downloading</string>
+    <string name="result_title">Query Result</string>
+    <string name="no_connection">There\'s no internet, try again later</string>
+    <string name="home_title">Query History</string>
 </resources>
