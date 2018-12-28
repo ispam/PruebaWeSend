@@ -2,16 +2,18 @@ package destinum.tech.pruebawesend.Data.Local.Entities
 
 import com.google.gson.annotations.SerializedName
 
-class AdList {
+data class AdList(
     @SerializedName("data")
-     val data: AdData ?= null
+    val listData: ListData
+)
 
-    @SerializedName("actions")
-    val actions: Actions ?= null
-
-    data class Actions(
-        @SerializedName("public_view")
-        private val public_view: String
-    )
-}
-
+data class ListData(
+    @SerializedName("profile")
+    val profile: Profile,
+    @SerializedName("ad_id")
+    val ad_id: Int,
+    @SerializedName("temp_price")
+    val temp_price: String,
+    @SerializedName("temp_price_usd")
+    val temp_price_usd: String
+)

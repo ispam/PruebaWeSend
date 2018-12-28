@@ -36,7 +36,7 @@ class NetworkModule {
     @Singleton @Provides
     fun provideInterceptor(): HttpLoggingInterceptor {
         val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { Log.v("LogginInterceptor", it) })
-        interceptor.level = HttpLoggingInterceptor.Level.BASIC
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
         return  interceptor
     }
 
@@ -69,7 +69,7 @@ class NetworkModule {
             OkHttpClient.Builder()
                 .cache(cache)
                 .addInterceptor(interceptor)
-                .addInterceptor(onlineInterceptor)
+                .addNetworkInterceptor(onlineInterceptor)
                 .build()
 
         } else {
