@@ -13,7 +13,7 @@ import destinum.tech.pruebawesend.Data.Local.Entities.ListData
 import destinum.tech.pruebawesend.R
 import java.util.*
 
-class HomeAdapter(val data: List<AdList>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ResultAdapter(val data: List<ListData>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.format_adlist, parent, false))
@@ -32,7 +32,7 @@ class HomeAdapter(val data: List<AdList>): RecyclerView.Adapter<RecyclerView.Vie
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val adData = data[position].listData
+        val adData = data[position]
         (holder as ViewHolder).bind(adData)
     }
 

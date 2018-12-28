@@ -15,6 +15,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module(includes = arrayOf(AppModule::class))
@@ -71,6 +72,9 @@ class NetworkModule {
         return if (BuildConfig.DEBUG) {
             OkHttpClient.Builder()
                 .cache(cache)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(interceptor)
                 .addInterceptor(onlineInterceptor)
                 .build()

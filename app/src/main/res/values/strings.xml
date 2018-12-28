@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PruebaWeSend</string>
+    <string name="downloading">Downloading</string>
 </resources>

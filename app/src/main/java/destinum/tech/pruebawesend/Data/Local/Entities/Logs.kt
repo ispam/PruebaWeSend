@@ -10,7 +10,7 @@ data class Logs(
     var above: String,
     var below: String
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var history_id: Long  = 0
+    @PrimaryKey(autoGenerate = false)
+    var logs_id: Long  = 0
 }
 

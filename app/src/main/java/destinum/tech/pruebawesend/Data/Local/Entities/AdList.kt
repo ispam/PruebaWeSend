@@ -1,6 +1,6 @@
 package destinum.tech.pruebawesend.Data.Local.Entities
 
-import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -13,6 +13,7 @@ data class AdList(
 @Entity
 data class ListData(
     @SerializedName("profile")
+    @Embedded
     var profile: Profile,
     @SerializedName("ad_id")
     var ad_id: Int,

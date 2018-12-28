@@ -2,6 +2,7 @@ package destinum.tech.pruebawesend.DI
 
 import dagger.Component
 import destinum.tech.pruebawesend.Activities.HomeActivity
+import destinum.tech.pruebawesend.Activities.ResultActivity
 import javax.inject.Singleton
 
 @Singleton
@@ -9,4 +10,6 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun inject(activity: HomeActivity)
+
+    fun inject(activity: ResultActivity)
 }
