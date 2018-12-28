@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import destinum.tech.pruebawesend.Adapters.LogAdapter
@@ -36,7 +35,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private val disposable = CompositeDisposable()
-    private lateinit var  dialog: ProgressDialog
+    private lateinit var dialog: ProgressDialog
 
     @Inject
     lateinit var provideAPI: LocalBitcoinsAPI
@@ -55,12 +54,12 @@ class HomeActivity : AppCompatActivity() {
         title = getString(R.string.home_title)
         checkFirstRun(this, {}, setUpTapTarget(), {})
 
-        home_recycler.layoutManager = LinearLayoutManager(this,  RecyclerView.VERTICAL, false)
+        home_recycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         getLogsFromDB()
 
         home_fab.setOnClickListener {
             showProgressDialog()
-            if (isOnline(this)){
+            if (isOnline(this)) {
                 getLastLogNumber()
             } else {
                 Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
@@ -72,6 +71,7 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
 
         getLogsFromDB()
+        home_message.visibility = View.INVISIBLE
     }
 
     private fun getLogsFromDB() {
@@ -95,7 +95,7 @@ class HomeActivity : AppCompatActivity() {
 
         disposable.add(logVM.getCurrentLogsCount()
             .subscribeOn(Schedulers.io())
-            .map {  getResults(it.toLong()) }
+            .map { getResults(it.toLong()) }
             .subscribe())
 
     }
@@ -108,15 +108,23 @@ class HomeActivity : AppCompatActivity() {
                 list.add(data1)
                 list.add(data2)
                 return@BiFunction list
-             })
+            })
             .subscribeOn(Schedulers.io())
             .doOnError { e -> Log.e(TAG, e.message) }
             .flatMapCompletable {
                 val adapterList = mutableListOf<ListData>()
 
                 for (dataResult in it) {
-                    for (adList in dataResult.data.ad_list){
-                        adapterList.add(ListData(adList.listData.profile, adList.listData.ad_id, adList.listData.temp_price, adList.listData.temp_price_usd, logId))
+                    for (adList in dataResult.data.ad_list) {
+                        adapterList.add(
+                            ListData(
+                                adList.listData.profile,
+                                adList.listData.ad_id,
+                                adList.listData.temp_price,
+                                adList.listData.temp_price_usd,
+                                logId
+                            )
+                        )
                     }
                 }
                 listDataVM.insertListData(adapterList)
@@ -125,6 +133,7 @@ class HomeActivity : AppCompatActivity() {
             .doOnComplete {
                 val intent = Intent(this, ResultActivity::class.java)
                 intent.putExtra("log_id", logId)
+                intent.putExtra("adapter", false)
                 startActivity(intent)
             }
             .subscribe())

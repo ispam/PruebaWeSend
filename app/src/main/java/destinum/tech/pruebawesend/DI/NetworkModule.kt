@@ -81,6 +81,9 @@ class NetworkModule {
         } else {
             OkHttpClient.Builder()
                 .cache(cache)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .writeTimeout(120, TimeUnit.SECONDS)
                 .addInterceptor(onlineInterceptor)
                 .build()
         }

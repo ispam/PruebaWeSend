@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class Log(
     var date: String,
-    var rate: String,
+    var rate_usd: String,
+    var rate_ves: String,
     var above: String,
     var below: String
 ) {

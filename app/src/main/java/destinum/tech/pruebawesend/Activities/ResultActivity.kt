@@ -25,6 +25,7 @@ class ResultActivity : AppCompatActivity() {
     }
 
     private val disposable = CompositeDisposable()
+    private var fromAdapter = false
 
     @Inject
     lateinit var listDataVM: ListDataViewModel
@@ -44,6 +45,7 @@ class ResultActivity : AppCompatActivity() {
         result_recycler.layoutManager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
 
         val logId = intent.extras.get("log_id") as Long
+        this.fromAdapter = intent.extras.get("adapter") as Boolean
 
         disposable.add(listDataVM.getListDataBasedOnLogID(logId)
             .subscribeOn(Schedulers.io())
@@ -51,7 +53,7 @@ class ResultActivity : AppCompatActivity() {
             .filter { it.isNotEmpty() }
             .map {
                 val adapter = ResultAdapter(it)
-                getAtypicalData(it)
+                getAtypicalData(it, this.fromAdapter)
                 adapter.setHasStableIds(true)
                 result_recycler.adapter = adapter
             }
@@ -59,20 +61,16 @@ class ResultActivity : AppCompatActivity() {
 
     }
 
-    private fun getAtypicalData(list: Collection<ListData>) {
+    private fun getAtypicalData(list: Collection<ListData>, adapter: Boolean) {
 
         val usd = list.map { it -> it.temp_price_usd.toDouble()}.average()
         val ves = list.map { it -> it.temp_price.toDouble()}.average()
         result_money1.text = "${String.format("%.${2}f", usd)} USD"
         result_money2.text = "${String.format("%.${2}f", ves)} VES"
 
-        val above = list
-            .map { it -> it.temp_price.toDouble() }
-            .filter { it -> it > usd }.count()
+        val above = list.filter { it -> it.temp_price_usd.toDouble() > usd }.count()
 
-        val below = list
-            .map { it -> it.temp_price.toDouble() }
-            .filter { it -> it < usd }.count()
+        val below = list.filter { it -> it.temp_price_usd.toDouble() < usd }.count()
 
         result_above.text = above.toString()
         result_below.text = below.toString()
@@ -80,12 +78,12 @@ class ResultActivity : AppCompatActivity() {
         val date = Calendar.getInstance()
         val sdf = SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a")
 
-        disposable.add(logVM.insertLog(Log(sdf.format(date.time), usd.toString(), above.toString(), below.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnComplete { android.util.Log.i(TAG, "Log Created") }
-            .subscribe())
-
+        if (!adapter) {
+            disposable.add(logVM.insertLog(Log(sdf.format(date.time), usd.toString(), ves.toString(), above.toString(), below.toString()))
+                .subscribeOn(Schedulers.io())
+                .doOnComplete { android.util.Log.i(TAG, "Log Created") }
+                .subscribe())
+        }
 
     }
 
