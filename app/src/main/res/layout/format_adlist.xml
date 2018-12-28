@@ -1,89 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:layout_width="wrap_content"
-                                                   android:layout_height="wrap_content">
-
-    <TextView
-            android:text="Dieeegoo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/format_adlist_username"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-            android:text="100%"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/format_adlist_feedback"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/format_adlist_username"/>
-    <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/format_adlist_trades"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/format_adlist_feedback"
-            app:layout_constraintStart_toEndOf="@+id/textView4"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            android:layout_marginEnd="8dp"/>
-    <TextView
-            android:text="Trades"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4"
-            app:layout_constraintTop_toTopOf="@+id/format_adlist_trades"
-            app:layout_constraintBottom_toBottomOf="@+id/format_adlist_trades"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/format_adlist_trades"
-            app:layout_constraintHorizontal_chainStyle="packed"/>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        android:layout_margin="4dp"
+        android:id="@+id/format_adlist_card"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@+id/format_adlist_trades"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <TextView
-                android:text="TextView"
+                android:text="Dieeegoo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/format_adlist_money1"
+                android:id="@+id/format_adlist_username"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/imageView"
+                android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+                android:text="100%"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/format_adlist_feedback"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/format_adlist_username"
+                app:layout_constraintStart_toEndOf="@+id/imageView2" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"/>
         <TextView
                 android:text="TextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/format_adlist_money2"
+                android:id="@+id/format_adlist_trades"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/format_adlist_money1"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/format_adlist_feedback"
+                android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView4" android:layout_marginStart="8dp"/>
+        <TextView
+                android:text="Trades:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:textColor="@android:color/black"
+                app:layout_constraintTop_toTopOf="@+id/format_adlist_trades"
+                app:layout_constraintBottom_toBottomOf="@+id/format_adlist_trades"
+                android:layout_marginStart="8dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/format_adlist_constraint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/format_adlist_trades"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"/>
+                app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/format_adlist_money1"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/format_adlist_money2"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintTop_toBottomOf="@+id/format_adlist_money1"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_account"
+                android:id="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/format_adlist_username"
+                app:layout_constraintBottom_toBottomOf="@+id/format_adlist_username"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_thumbs"
+                android:id="@+id/imageView2"
+                app:layout_constraintBottom_toBottomOf="@+id/format_adlist_feedback"
+                app:layout_constraintTop_toTopOf="@+id/format_adlist_feedback"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_trades"
+                android:id="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/textView4"
+                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

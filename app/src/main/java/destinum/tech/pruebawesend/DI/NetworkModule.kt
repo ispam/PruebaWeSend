@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import destinum.tech.pruebawesend.BuildConfig
 import destinum.tech.pruebawesend.Data.Remote.LocalBitcoinsAPI
+import destinum.tech.pruebawesend.Utils.isOnline
 import okhttp3.Cache
-import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,54 +24,56 @@ class NetworkModule {
         const val BASE_URL = "https://localbitcoins.com/"
     }
 
-    @Singleton @Provides
+    @Singleton
+    @Provides
     fun provideAPI(retrofit: Retrofit): LocalBitcoinsAPI = retrofit.create(LocalBitcoinsAPI::class.java)
 
-    @Singleton @Provides
-    fun provideCache(cache: File): Cache = Cache(cache, 10*1024*1024)
+    @Singleton
+    @Provides
+    fun provideCache(cache: File): Cache = Cache(cache, 10 * 1024 * 1024)
 
-    @Singleton @Provides
+    @Singleton
+    @Provides
     fun provideFile(context: Context): File = File(context.cacheDir, "okhttp_cache")
 
-    @Singleton @Provides
+    @Singleton
+    @Provides
     fun provideInterceptor(): HttpLoggingInterceptor {
         val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { Log.v("LogginInterceptor", it) })
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        return  interceptor
+        return interceptor
     }
 
-    @Singleton @Provides
+    @Singleton
+    @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
-            Retrofit.Builder().client(okHttpClient)
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
+        Retrofit.Builder().client(okHttpClient)
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
 
-    @Singleton @Provides
-    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor, cache: Cache): OkHttpClient {
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor, cache: Cache, context: Context): OkHttpClient {
 
         val onlineInterceptor = Interceptor { chain ->
-            try {
-                val maxStale = 60 * 60 * 24
-                val offlineRequest = chain.request().newBuilder()
-                    .removeHeader("Pragma")
-                    .cacheControl(CacheControl.FORCE_NETWORK)
-                    .header("Cache-Control", "public, only-if-cached, max-stale=$maxStale")
+            var request = chain.request()
+            request = if (isOnline(context)) {
+                request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build()
+            } else {
+                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7)
                     .build()
-                chain.proceed(offlineRequest)
-            } catch (e: Exception) {
-                chain.proceed(chain.request())
             }
+            chain.proceed(request)
         }
 
-        return if (BuildConfig.DEBUG){
+        return if (BuildConfig.DEBUG) {
             OkHttpClient.Builder()
                 .cache(cache)
                 .addInterceptor(interceptor)
-                .addNetworkInterceptor(onlineInterceptor)
+                .addInterceptor(onlineInterceptor)
                 .build()
-
         } else {
             OkHttpClient.Builder()
                 .cache(cache)

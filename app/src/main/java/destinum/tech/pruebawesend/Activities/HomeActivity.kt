@@ -36,11 +36,25 @@ class HomeActivity : AppCompatActivity() {
         disposable.add(provideAPI.getList(1)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map { home_recycler.adapter = HomeAdapter(it.data.ad_list) }
+            .map {
+                val adapter = HomeAdapter(it.data.ad_list)
+                adapter.setHasStableIds(true)
+                home_recycler.adapter = adapter
+            }
             .doOnError { Toast.makeText(this, "Something Happened, Try Again", Toast.LENGTH_LONG).show() }
             .doOnNext { Log.i(TAG, "Got first") }
             .subscribe())
     }
+
+//    MaterialTapTargetPrompt.Builder(this)
+//    .setTarget(til)
+//    .setPrimaryText(getString(R.string.prompt_extra1))
+//    .setSecondaryText(getString(R.string.prompt_extra2))
+//    .setBackgroundColour(resources.getColor(R.color.colorPrimaryDark))
+//    .setAnimationInterpolator(FastOutSlowInInterpolator())
+//    .setPromptBackground(RectanglePromptBackground())
+//    .setPromptFocal(RectanglePromptFocal())
+//    .show()
 
     override fun onStop() {
         if (!disposable.isDisposed) disposable.clear()

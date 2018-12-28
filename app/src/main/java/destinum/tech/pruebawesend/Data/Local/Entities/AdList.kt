@@ -1,5 +1,8 @@
 package destinum.tech.pruebawesend.Data.Local.Entities
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class AdList(
@@ -7,13 +10,18 @@ data class AdList(
     val listData: ListData
 )
 
+@Entity
 data class ListData(
     @SerializedName("profile")
-    val profile: Profile,
+    var profile: Profile,
     @SerializedName("ad_id")
-    val ad_id: Int,
+    var ad_id: Int,
     @SerializedName("temp_price")
-    val temp_price: String,
+    var temp_price: String,
     @SerializedName("temp_price_usd")
-    val temp_price_usd: String
-)
+    var temp_price_usd: String,
+    var logs_id: Long
+) {
+    @PrimaryKey(autoGenerate = true)
+    var list_data_id: Long = 0
+}
