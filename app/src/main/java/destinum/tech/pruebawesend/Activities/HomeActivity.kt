@@ -74,7 +74,7 @@ class HomeActivity : AppCompatActivity() {
         home_message.visibility = View.INVISIBLE
     }
 
-    private fun getLogsFromDB() {
+    internal fun getLogsFromDB() {
 
         disposable.add(logVM.getAllLogs()
             .subscribeOn(Schedulers.io())

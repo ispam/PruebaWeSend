@@ -38,6 +38,9 @@ dependencies {
     def retrofitVersion = '2.4.0'
     def okhttpVersion = '3.11.0'
     def materialTapVersion = '2.7.0'
+    def assertJVersion = '3.11.1'
+    def mockKVersion = '1.9'
+    def jUnit5Version = '5.3.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -69,4 +72,20 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation "uk.co.samuelwall:material-tap-target-prompt:$materialTapVersion"
     implementation 'com.google.android.material:material:1.1.0-alpha01'
+
+    //    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnit5Version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jUnit5Version"
+
+//    // (Optional) If you need "Parameterized Tests"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$jUnit5Version"
+
+    // AssertJ:
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+
+    // MockK:
+    testImplementation "io.mockk:mockk:$mockKVersion"
+
+    // Instrumentation Tests:
+//    androidTestImplementation "io.mockk:mockk-android:$mockKVersion"
 }
